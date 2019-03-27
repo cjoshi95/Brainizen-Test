@@ -14,60 +14,49 @@ $(document).ready(function ()
         loadbar(domain);
     });
 
-    $(document).on("click","#dashboard",function (e)
+    $(document).on("click", "#dashboard", function (e)
     {
         $("#panel").fadeIn(500);
     });
-    $(document).on("click", "table tbody tr", function(e) {
+
+    $(document).on("click", "table tbody tr", function (e)
+    {
         let domain = $(this).attr("id");
-        var dom= "";
-        if(domain==="d1")
+        var dom = "";
+        if (domain === "d1")
         {
             dom = "Domain 1";
-            let table2 = "<h1 class='display-4'>People Under " + dom + "</h1>";
-            table2 += "<table class='table'><thead><th>Sr no</th><th>Name</th><th>Domain</th><th>Wishes</th></thead><tbody>";
 
-            for(let i=0;i<d1options.data[0].dataPoints.length;i++)
-            {
-                table2 += "<tr>";
-                table2 += "<td>"+ d1options.data[0].dataPoints[i].srno +"</td>";
-                table2 += "<td>"+ d1options.data[0].dataPoints[i].label +"</td>";
-                table2 += "<td>"+ dom +"</td>";
-                table2 += "<td>"+ d1options.data[0].dataPoints[i].y +"</td>";
-                table2 += "</tr>";
-            }
-            table2 += "</tbody></table>";
-
-            $("#table2div").hide();
-            document.getElementById("table2div").innerHTML = table2;
-            $("#table2div").fadeIn(500);
-
+            generateTblTwo(d1options.data[0].dataPoints, dom);
         }
         else
         {
             dom = "Domain 2";
-            let table2 = "<h1 class='display-4'>People Under " + dom + "</h1>";
-            table2 += "<table class='table'><thead><th>Sr no</th><th>Name</th><th>Domain</th><th>Wishes</th></thead><tbody>";
-
-            for(let i=0;i<d2options.data[0].dataPoints.length;i++)
-            {
-                table2 += "<tr>";
-                table2 += "<td>"+ d2options.data[0].dataPoints[i].srno +"</td>";
-                table2 += "<td>"+ d2options.data[0].dataPoints[i].label +"</td>";
-                table2 += "<td>"+ dom +"</td>";
-                table2 += "<td>"+ d2options.data[0].dataPoints[i].y +"</td>";
-                table2 += "</tr>";
-            }
-            table2 += "</tbody></table>";
-
-            $("#table2div").hide();
-            document.getElementById("table2div").innerHTML = table2;
-            $("#table2div").fadeIn(500);
+            generateTblTwo(d2options.data[0].dataPoints, dom);
         }
     });
 });
 
+function generateTblTwo(datapoints, domain)
+{
+    let table2 = "<h1 class='display-4'>People Under " + domain + "</h1>";
+    table2 += "<table class='table'><thead><th>Sr no</th><th>Name</th><th>Domain</th><th>Wishes</th></thead><tbody>";
 
+    for (let i = 0; i < datapoints.length; i++)
+    {
+        table2 += "<tr>";
+        table2 += "<td>" + datapoints[i].srno + "</td>";
+        table2 += "<td>" + datapoints[i].label + "</td>";
+        table2 += "<td>" + domain + "</td>";
+        table2 += "<td>" + datapoints[i].y + "</td>";
+        table2 += "</tr>";
+    }
+    table2 += "</tbody></table>";
+
+    $("#table2div").hide();
+    document.getElementById("table2div").innerHTML = table2;
+    $("#table2div").fadeIn(500);
+}
 
 function generateTblOne(srno, y, label, domain)
 {
@@ -85,7 +74,7 @@ function generateTblOne(srno, y, label, domain)
     table += "<td>" + srno + "</td>";
     table += "<td>" + label + "</td>";
     table += "<td>" + y + "</td>";
-    table += "<td id='"+ domain +"'>" + d + "</td>";
+    table += "<td id='" + domain + "'>" + d + "</td>";
     table += "</tr></tbody></table>";
 
     $("#table1div").hide();
@@ -96,25 +85,27 @@ function generateTblOne(srno, y, label, domain)
 
 function loadbar(domain)
 {
-    var options = {};
+    var options = {
+        animationEnabled: true,
+        theme: "light2",
+        title: {
+            text: "Details of People"
+        },
+        axisY2: {
+            lineThickness: 0
+        },
+        toolTip: {
+            shared: true
+        },
+        legend: {
+            verticalAlign: "top",
+            horizontalAlign: "center"
+        }
+    };
+
     if (domain === "d1")
     {
-        options = {
-            animationEnabled: true,
-            theme: "light2",
-            title: {
-                text: "Details of People"
-            },
-            axisY2: {
-                lineThickness: 0
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                verticalAlign: "top",
-                horizontalAlign: "center"
-            },
+        options = Object.assign({
             data: [
                 {
                     type: "stackedBar",
@@ -150,26 +141,11 @@ function loadbar(domain)
                     }
                 }
             ]
-        };
+        });
     }
     else
     {
-        options = {
-            animationEnabled: true,
-            theme: "light2",
-            title: {
-                text: "Details of People"
-            },
-            axisY2: {
-                lineThickness: 0
-            },
-            toolTip: {
-                shared: true
-            },
-            legend: {
-                verticalAlign: "top",
-                horizontalAlign: "center"
-            },
+        options = Object.assign({
             data: [
                 {
                     type: "stackedBar",
@@ -205,8 +181,7 @@ function loadbar(domain)
                     }
                 }
             ]
-        };
-
+        });
     }
     $("#chartContainer1").CanvasJSChart(options);
 }
