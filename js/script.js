@@ -250,6 +250,4 @@ function loadpie(domain)
         };
         $("#chartContainer").CanvasJSChart(d2options);
     }
-
-
 }
